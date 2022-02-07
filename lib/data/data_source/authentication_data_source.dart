@@ -1,15 +1,16 @@
-import 'package:movie_app_task/core/authentication_base_class.dart';
+import 'package:http/http.dart';
 
-class AuthenticationDataSource implements AuthenticationBaseClass {
+class AuthenticationDataSource {
+  final baseUrl = 'https://zm-movies-assignment.herokuapp.com/api/auth/local';
   @override
-  Future login() {
-    // TODO: implement login
-    throw UnimplementedError();
-  }
+  Future login({required String email, required String password}) async {
+    final body = {"identifier": email, "password": password};
+    final response = await post(
+      Uri.parse(baseUrl + ""),
+      body: body,
+    );
 
-  @override
-  Future signUp() {
-    // TODO: implement signUp
-    throw UnimplementedError();
+    print(response.statusCode);
+    print(response.body);
   }
 }

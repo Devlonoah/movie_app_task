@@ -1,21 +1,36 @@
-import 'package:movie_app_task/core/authentication_base_class.dart';
+import 'package:movie_app_task/core/keys.dart';
 import 'package:movie_app_task/data/data_source/authentication_data_source.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class UserRepository implements AuthenticationBaseClass {
-  UserRepository(AuthenticationDataSource authenticationDataSource)
-      : _authenticationDataSource = authenticationDataSource;
+class UserRepository {
+  UserRepository({
+    required this.authenticationDataSource,
+    required this.sharedPreferences,
+  });
 
-  final AuthenticationDataSource _authenticationDataSource;
+  final SharedPreferences sharedPreferences;
 
-  @override
-  Future<String> login() {
-    // TODO: implement login
-    throw UnimplementedError();
+  final AuthenticationDataSource authenticationDataSource;
+
+  Future<String> login({
+    required String email,
+    required String password,
+  }) async {
+    final result = await authenticationDataSource.login(
+      email: email,
+      password: password,
+    );
+
+    return result;
   }
 
-  @override
-  Future<String> signUp() {
-    // TODO: implement signUp
-    throw UnimplementedError();
+  Future<String> loginWithSavedCredential() async {
+    final email = sharedPreferences.getString(AppKey.email);
+    final password = sharedPreferences.getString(AppKey.password);
+
+    final result = await authenticationDataSource.login(
+        email: email!, password: password!);
+
+    return '';
   }
 }
