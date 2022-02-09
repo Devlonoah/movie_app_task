@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:movie_app_task/bloc/authentication/authentication_cubit.dart';
 import 'package:movie_app_task/bloc/remember_me/remember_me_cubit.dart';
+import 'package:movie_app_task/observer.dart';
 import 'package:movie_app_task/pages/landing_page/landing_page.dart';
 import 'package:movie_app_task/pages/login/login_page.dart';
 import 'package:movie_app_task/theme/color.dart';
@@ -13,7 +14,15 @@ import 'injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initializeInjection();
+
+  BlocOverrides.runZoned(
+    () {
+      // Use cubits...
+    },
+    blocObserver: MyBlocObserver(),
+  );
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: AppColor.backgroundColor
           //color set to transperent or set your own color
@@ -40,7 +49,6 @@ class MyApp extends StatelessWidget {
         title: 'Movie_',
         theme: ThemeData(
             primarySwatch: Colors.blue,
-            // fontFamily: GoogleFonts.montserrat().fontFamily,
             scaffoldBackgroundColor: AppColor.backgroundColor,
             primaryColor: AppColor.primaryColor,
             textTheme: customTextTheme),

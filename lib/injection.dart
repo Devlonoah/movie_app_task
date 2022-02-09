@@ -27,5 +27,10 @@ Future<void> initializeInjection() async {
 //blocs
   getIt.registerFactory(() => RememberMeCubit(getIt()));
 
-  getIt.registerFactory(() => AuthenticationCubit(getIt()));
+  getIt.registerFactory(
+    () => AuthenticationCubit(
+      getIt(),
+      getIt(),
+    ),
+  );
 }

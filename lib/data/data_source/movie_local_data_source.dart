@@ -12,4 +12,10 @@ class MovieLocalDataSource implements MovieBaseClass {
 
   @override
   Future updateMovie() async {}
+
+  @override
+  Future findOneMovie(String id) {
+    // TODO: implement findOneMovie
+    throw UnimplementedError();
+  }
 }

@@ -30,7 +30,6 @@ class UserRepository {
 
     final result = await authenticationDataSource.login(
         email: email!, password: password!);
-
-    return '';
+    return result;
   }
 }

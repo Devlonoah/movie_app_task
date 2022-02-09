@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_overlay/loading_overlay.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_cubit.dart';
+import 'package:movie_app_task/bloc/form_bloc/field_bloc/email_field_bloc.dart';
+
+import 'package:movie_app_task/bloc/form_bloc/field_bloc/password_bloc.dart';
+import 'package:movie_app_task/bloc/form_bloc/field_bloc/remember_checkbox_cubit.dart';
+import 'package:movie_app_task/bloc/form_bloc/login_form/login_form_bloc.dart';
+import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
+import 'package:movie_app_task/data/data_source/authentication_data_source.dart';
+import 'package:movie_app_task/pages/global_widget/reusable_button.dart';
 import 'package:movie_app_task/pages/global_widget/reusable_curves.dart';
 
 import 'package:movie_app_task/theme/color.dart';
@@ -19,48 +30,155 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginPageBody extends StatelessWidget {
+class LoginPageBody extends StatefulWidget {
   const LoginPageBody({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPageBody> createState() => _LoginPageBodyState();
+}
+
+class _LoginPageBodyState extends State<LoginPageBody> {
+  late EmailFieldBloc _emailFieldBloc;
+
+  late RememberCheckboxBloc _checkboxBloc;
+
+  late PasswordBloc _passwordFieldBloc;
+
+  late LoginFormBloc _loginFormBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _emailFieldBloc = EmailFieldBloc(InitialState(''));
+
+    _passwordFieldBloc = PasswordBloc(InitialState(''));
+    _checkboxBloc = RememberCheckboxBloc(InitialState(false));
+
+    _loginFormBloc = LoginFormBloc(
+      emailFieldBloc: _emailFieldBloc,
+      passwordBloc: _passwordFieldBloc,
+      rememberCheckboxBloc: _checkboxBloc,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final _mq = MediaQuery.of(context);
-    return SafeArea(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(
-            top: 0,
-            bottom: _mq.size.height * 0.1,
-            right: 0,
-            left: 0,
-            child: inputSection(context),
-          ),
-          const ReusableBottomCurves()
-        ],
-      ),
-    );
-  }
+    final authDataSource = AuthenticationDataSource();
 
-  Widget inputSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kkMargin),
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
+    return BlocListener<AuthenticationCubit, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthenticationSuccessful) {
+          print("oya navigate to home screen");
+        }
+
+        if (state is AuthenticationFailed) {
+          print("show snackbar to display error");
+        }
+      },
+      child: LoadingOverlay(
+        isLoading: context.read<AuthenticationCubit>().state
+            is AuthenticationInProgress,
+        child: SafeArea(
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              Center(child: _boldheader(context)),
-              const SizedBox(height: 40),
-              const ReusableTextField(hintText: 'email'),
-              const SizedBox(height: 24),
-              const ReusableTextField(hintText: 'password'),
-              const SizedBox(height: 24),
-              _rememberMe(context),
-              const SizedBox(height: 24),
-              const ReusableButton()
+              Positioned(
+                top: 0,
+                bottom: _mq.size.height * 0.1,
+                right: 0,
+                left: 0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kkMargin),
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(child: _boldheader(context)),
+                          const SizedBox(height: 40),
+
+                          //Email textInput
+
+                          BlocBuilder<EmailFieldBloc, ValidationState>(
+                            bloc: _emailFieldBloc,
+                            builder: (context, state) {
+                              return ReusableTextField(
+                                hintText: 'email',
+                                errorText: state is InvalidState
+                                    ? "invalid email"
+                                    : "",
+                                onChanged: (x) {
+                                  _emailFieldBloc.add(x);
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 12),
+
+                          //Password Input
+                          BlocBuilder<PasswordBloc, ValidationState>(
+                            bloc: _passwordFieldBloc,
+                            builder: (context, state) {
+                              return ReusableTextField(
+                                hintText: 'password',
+                                errorText: state is InvalidState
+                                    ? "Invalid password"
+                                    : "",
+                                onChanged: (x) async {
+                                  _passwordFieldBloc.add(x);
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 24),
+
+                          BlocBuilder<RememberCheckboxBloc,
+                              ValidationState<bool>>(
+                            bloc: _checkboxBloc,
+                            builder: (context, state) {
+                              print("checkbox value $state");
+                              return _rememberMe(
+                                  context: context,
+                                  onTap: () => _checkboxBloc.add(!state.data),
+                                  color: state is ValidState
+                                      ? AppColor.primaryColor
+                                      : Colors.grey.shade500);
+                            },
+                          ),
+                          const SizedBox(height: 24),
+
+                          //Remember me checkBox
+
+                          BlocBuilder<LoginFormBloc,
+                              ValidationState<LoginDetails>>(
+                            bloc: _loginFormBloc,
+                            builder: (context, state) {
+                              return ReusableButton(
+                                onPressed: state is ValidState
+                                    ? () {
+                                        context
+                                            .read<AuthenticationCubit>()
+                                            .login(
+                                              email: state.data.email,
+                                              password: state.data.password,
+                                              rememberMe: state.data.rememberMe,
+                                            );
+                                      }
+                                    : null,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const ReusableBottomCurves()
             ],
           ),
         ),
@@ -68,7 +186,36 @@ class LoginPageBody extends StatelessWidget {
     );
   }
 
-  Row _rememberMe(BuildContext context) {
+  // Widget inputSection(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: kkMargin),
+  //     child: SingleChildScrollView(
+  //       child: SizedBox(
+  //         height: MediaQuery.of(context).size.height,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             Center(child: _boldheader(context)),
+  //             const SizedBox(height: 40),
+  //             const ReusableTextField(hintText: 'email'),
+  //             const SizedBox(height: 24),
+  //             const ReusableTextField(hintText: 'password'),
+  //             const SizedBox(height: 24),
+  //             _rememberMe(context),
+  //             const SizedBox(height: 24),
+  //             const ReusableButton()
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Row _rememberMe(
+      {void Function()? onTap,
+      required BuildContext context,
+      required Color color}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -76,9 +223,9 @@ class LoginPageBody extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: Material(
-            color: Colors.red,
+            color: color,
             child: InkWell(
-              onTap: () {},
+              onTap: onTap,
               child: Container(
                 decoration: BoxDecoration(
                     // color: Colors.grey,
@@ -112,39 +259,17 @@ class LoginPageBody extends StatelessWidget {
   }
 }
 
-class ReusableButton extends StatelessWidget {
-  const ReusableButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: TextButton.styleFrom(
-          backgroundColor: AppColor.primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-      onPressed: () {},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
-        child: Text(
-          'LOG IN',
-          style: Theme.of(context)
-              .textTheme
-              .button
-              ?.copyWith(color: AppColor.whiteColor),
-        ),
-      ),
-    );
-  }
-}
-
 class ReusableTextField extends StatelessWidget {
   final String hintText;
   final void Function(String)? onChanged;
+  final String errorText;
 
-  const ReusableTextField({Key? key, required this.hintText, this.onChanged})
-      : super(key: key);
+  const ReusableTextField({
+    Key? key,
+    required this.hintText,
+    this.onChanged,
+    required this.errorText,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -154,6 +279,7 @@ class ReusableTextField extends StatelessWidget {
         style: customTextTheme.bodyText2?.copyWith(color: AppColor.whiteColor),
         onChanged: onChanged,
         decoration: InputDecoration(
+          errorText: errorText,
           fillColor: AppColor.inputColor,
           filled: true,
           border: InputBorder.none,

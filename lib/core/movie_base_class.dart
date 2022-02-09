@@ -1,13 +1,18 @@
 abstract class MovieBaseClass {
-  //create
+  /// Create
   Future createMovie();
 
-  //read
+  /// Read
   Future getMovie();
 
-  //update
+  /// Update
   Future updateMovie();
 
-  //delete
+  ///Delete
   Future delete();
+
+  /// Find one movie by id
+  ///
+  ///
+  Future findOneMovie(String id);
 }

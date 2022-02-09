@@ -30,4 +30,10 @@ class MovieRemoteDataSource implements MovieBaseClass {
     // TODO: implement updateMovie
     throw UnimplementedError();
   }
+
+  @override
+  Future findOneMovie(String id) {
+    // TODO: implement findOneMovie
+    throw UnimplementedError();
+  }
 }

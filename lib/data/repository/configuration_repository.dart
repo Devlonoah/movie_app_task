@@ -12,4 +12,8 @@ class ConfigurationRepository {
   bool? getRememberMeStatus() {
     return _sharedPreferences.getBool(AppKey.rememberMe);
   }
+
+  void setRememberMeStatus(bool value) {
+    _sharedPreferences.setBool(AppKey.rememberMe, value);
+  }
 }
