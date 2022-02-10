@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
+import 'package:movie_app_task/data/models/movie_model.dart';
 
 import '../../core/movie_base_class.dart';
 
@@ -7,10 +10,31 @@ class MovieRemoteDataSource implements MovieBaseClass {
 
   const MovieRemoteDataSource(this._client);
 
+  final baseUrl = "https://zm-movies-assignment.herokuapp.com/api";
+
   @override
-  Future createMovie() {
-    // TODO: implement createMovie
-    throw UnimplementedError();
+  Future fetchAllMovie() async {
+    var response = await http.get(Uri.parse(baseUrl + "/movies?populate=*"));
+
+    return MovieModel.fromJson(response.body);
+  }
+
+  @override
+  Future createMovie(
+      {required String name, required String year, required File file}) async {
+    http.MultipartRequest request =
+        http.MultipartRequest('POST', Uri.parse(baseUrl + "/api/movies"));
+
+    request.fields.addAll({'data': name, "publicationYear": year});
+
+    request.files
+        .add(await http.MultipartFile.fromPath('files.poster', file.path));
+
+    final result = await request.send();
+
+    final response = await http.Response.fromStream(result);
+
+    return response;
   }
 
   @override

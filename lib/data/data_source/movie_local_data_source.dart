@@ -1,9 +1,4 @@
-import 'package:movie_app_task/core/movie_base_class.dart';
-
-class MovieLocalDataSource implements MovieBaseClass {
-  @override
-  Future createMovie() async {}
-
+class MovieLocalDataSource {
   @override
   Future delete() async {}
 
@@ -12,10 +7,4 @@ class MovieLocalDataSource implements MovieBaseClass {
 
   @override
   Future updateMovie() async {}
-
-  @override
-  Future findOneMovie(String id) {
-    // TODO: implement findOneMovie
-    throw UnimplementedError();
-  }
 }

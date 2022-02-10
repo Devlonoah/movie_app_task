@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_cubit.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
 import 'package:movie_app_task/bloc/form_bloc/field_bloc/email_field_bloc.dart';
 
 import 'package:movie_app_task/bloc/form_bloc/field_bloc/password_bloc.dart';
@@ -67,7 +67,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
     final _mq = MediaQuery.of(context);
     final authDataSource = AuthenticationDataSource();
 
-    return BlocListener<AuthenticationCubit, AuthenticationState>(
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationSuccessful) {
           print("oya navigate to home screen");
@@ -78,7 +78,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
         }
       },
       child: LoadingOverlay(
-        isLoading: context.read<AuthenticationCubit>().state
+        isLoading: context.watch<AuthenticationBloc>().state
             is AuthenticationInProgress,
         child: SafeArea(
           child: Stack(
@@ -161,7 +161,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                                 onPressed: state is ValidState
                                     ? () {
                                         context
-                                            .read<AuthenticationCubit>()
+                                            .read<AuthenticationBloc>()
                                             .login(
                                               email: state.data.email,
                                               password: state.data.password,

@@ -1,10 +1,11 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_cubit.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as client;
 
-import 'bloc/remember_me/remember_me_cubit.dart';
+import 'bloc/remember_me/remember_me_bloc.dart';
 import 'data/data_source/authentication_data_source.dart';
 import 'data/repository/configuration_repository.dart';
 import 'data/repository/user_repository.dart';
@@ -18,17 +19,21 @@ Future<void> initializeInjection() async {
 
   getIt.registerLazySingleton(() => client.Client());
 
+  getIt.registerLazySingleton(() => const FlutterSecureStorage());
+
   getIt.registerLazySingleton(() => AuthenticationDataSource());
   getIt.registerLazySingleton(() => UserRepository(
-      authenticationDataSource: getIt(), sharedPreferences: _sharedPreference));
+      authenticationDataSource: getIt(),
+      sharedPreferences: _sharedPreference,
+      secureStorage: getIt()));
   //Repositories
   getIt.registerLazySingleton(() => ConfigurationRepository(getIt()));
 
 //blocs
-  getIt.registerFactory(() => RememberMeCubit(getIt()));
+  getIt.registerFactory(() => RememberMeBloc(getIt()));
 
   getIt.registerFactory(
-    () => AuthenticationCubit(
+    () => AuthenticationBloc(
       getIt(),
       getIt(),
     ),
