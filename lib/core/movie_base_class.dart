@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:movie_app_task/data/models/movie_model.dart';
+
 abstract class MovieBaseClass {
   ///Fetch al movies
 
-  Future fetchAllMovie();
+  Future<MovieResultModel> fetchAllMovie();
 
   /// Create
   Future createMovie(

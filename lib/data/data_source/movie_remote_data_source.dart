@@ -1,22 +1,34 @@
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_app_task/core/keys.dart';
 import 'package:movie_app_task/data/models/movie_model.dart';
+import 'package:movie_app_task/data/repository/configuration_repository.dart';
 
 import '../../core/movie_base_class.dart';
 
 class MovieRemoteDataSource implements MovieBaseClass {
   final http.Client _client;
 
-  const MovieRemoteDataSource(this._client);
+  final FlutterSecureStorage storage;
+  const MovieRemoteDataSource(this._client, this.storage);
 
   final baseUrl = "https://zm-movies-assignment.herokuapp.com/api";
 
   @override
-  Future fetchAllMovie() async {
-    var response = await http.get(Uri.parse(baseUrl + "/movies?populate=*"));
+  Future<MovieResultModel> fetchAllMovie() async {
+    final jwt = await storage.read(key: AppKey.jwtToken);
+    final header = {HttpHeaders.authorizationHeader: "Bearer $jwt"};
 
-    return MovieModel.fromJson(response.body);
+    var response = await http.get(Uri.parse(baseUrl + "/movies?populate=*"),
+        headers: header);
+
+    if (response.statusCode == 200) {
+      return MovieResultModel.fromJson(response.body);
+    }
+
+    throw MovieFetchException;
   }
 
   @override
@@ -61,3 +73,5 @@ class MovieRemoteDataSource implements MovieBaseClass {
     throw UnimplementedError();
   }
 }
+
+class MovieFetchException implements Exception {}

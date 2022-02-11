@@ -5,8 +5,10 @@ class ReusableButton extends StatelessWidget {
   const ReusableButton({
     Key? key,
     this.onPressed,
+    required this.label,
   }) : super(key: key);
 
+  final String label;
   final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class ReusableButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15.0),
         child: Text(
-          'LOG IN',
+          label,
           style: Theme.of(context)
               .textTheme
               .button

@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/bloc/remember_me/remember_me_bloc.dart';
-import 'package:movie_app_task/observer.dart';
+import 'package:movie_app_task/pages/create_movie.dart/create_movie.dart';
 import 'package:movie_app_task/pages/home/home.dart';
 import 'package:movie_app_task/pages/landing_page/landing_page.dart';
 import 'package:movie_app_task/pages/login/login_page.dart';
@@ -12,6 +11,7 @@ import 'package:movie_app_task/theme/color.dart';
 import 'package:movie_app_task/theme/theme.dart';
 
 import 'injection.dart';
+import 'observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,12 +23,12 @@ void main() async {
           //color set to transperent or set your own color
           ));
 
-  // BlocOverrides.runZoned(
-  //   () {
-  //     // Use cubits...
-  //   },
-  //   blocObserver: MyBlocObserver(),
-  // );
+  BlocOverrides.runZoned(
+    () {
+      // Use cubits...
+    },
+    blocObserver: MyBlocObserver(),
+  );
   runApp(const MyApp());
 }
 
@@ -58,7 +58,8 @@ class MyApp extends StatelessWidget {
         routes: {
           LandingPage.id: (context) => const LandingPage(),
           LoginPage.id: (contex) => const LoginPage(),
-          HomePage.id: (context) => const HomePage()
+          HomePage.id: (context) => const HomePage(),
+          CreateMoviePage.id: (context) => const CreateMoviePage()
         },
         initialRoute: LandingPage.id,
         debugShowCheckedModeBanner: false,

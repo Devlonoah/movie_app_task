@@ -158,6 +158,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                             bloc: _loginFormBloc,
                             builder: (context, state) {
                               return ReusableButton(
+                                label: "LOG IN",
                                 onPressed: state is ValidState
                                     ? () {
                                         context
@@ -282,7 +283,11 @@ class ReusableTextField extends StatelessWidget {
           errorText: errorText,
           fillColor: AppColor.inputColor,
           filled: true,
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(kkBorderRadius)),
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
           hintText: hintText,
           hintStyle:
               customTextTheme.subtitle2?.copyWith(color: AppColor.whiteColor),

@@ -1,4 +1,4 @@
-part of 'movie_cubit.dart';
+part of 'movie_bloc.dart';
 
 abstract class MovieState extends Equatable {
   const MovieState();
@@ -12,7 +12,7 @@ class MovieInitial extends MovieState {}
 class MovieInProgress extends MovieState {}
 
 class MovieSuccesful extends MovieState {
-  final List<MovieModel> movies;
+  final MovieResultModel movies;
   const MovieSuccesful({
     required this.movies,
   });
