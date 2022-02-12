@@ -187,32 +187,6 @@ class _LoginPageBodyState extends State<LoginPageBody> {
     );
   }
 
-  // Widget inputSection(BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: kkMargin),
-  //     child: SingleChildScrollView(
-  //       child: SizedBox(
-  //         height: MediaQuery.of(context).size.height,
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.stretch,
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             Center(child: _boldheader(context)),
-  //             const SizedBox(height: 40),
-  //             const ReusableTextField(hintText: 'email'),
-  //             const SizedBox(height: 24),
-  //             const ReusableTextField(hintText: 'password'),
-  //             const SizedBox(height: 24),
-  //             _rememberMe(context),
-  //             const SizedBox(height: 24),
-  //             const ReusableButton()
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Row _rememberMe(
       {void Function()? onTap,
       required BuildContext context,
@@ -264,33 +238,47 @@ class ReusableTextField extends StatelessWidget {
   final String hintText;
   final void Function(String)? onChanged;
   final String errorText;
+  final bool readOnly;
 
+  final TextInputType inputType;
   const ReusableTextField({
     Key? key,
     required this.hintText,
     this.onChanged,
     required this.errorText,
+    this.readOnly = false,
+    this.inputType = TextInputType.name,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(kkBorderRadius),
-      child: TextField(
-        textAlign: TextAlign.left,
-        style: customTextTheme.bodyText2?.copyWith(color: AppColor.whiteColor),
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          errorText: errorText,
-          fillColor: AppColor.inputColor,
-          filled: true,
-          border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(kkBorderRadius)),
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          hintText: hintText,
-          hintStyle:
-              customTextTheme.subtitle2?.copyWith(color: AppColor.whiteColor),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.1,
+      child: Center(
+        child: TextField(
+          keyboardType: inputType,
+          readOnly: readOnly,
+          textAlign: TextAlign.left,
+          style:
+              customTextTheme.bodyText2?.copyWith(color: AppColor.whiteColor),
+          onChanged: onChanged,
+          expands: true,
+          minLines: null,
+          maxLines: null,
+          decoration: InputDecoration(
+            isDense: true,
+            contentPadding: const EdgeInsets.all(12),
+            errorText: errorText,
+            fillColor: AppColor.inputColor,
+            filled: true,
+            border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(kkBorderRadius)),
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            hintText: hintText,
+            hintStyle:
+                customTextTheme.subtitle2?.copyWith(color: AppColor.whiteColor),
+          ),
         ),
       ),
     );

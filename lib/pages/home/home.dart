@@ -43,13 +43,20 @@ class _HomePageBodyState extends State<HomePageBody> {
     return BlocBuilder<MovieBloc, MovieState>(
       bloc: _movieBloc,
       builder: (context, state) {
+        print("fetch all movied ever added state : $state   ");
+
         if (state is MovieSuccesful) {
           return MovieLoadedWidget(movies: state.movies);
         }
 
         if (state is MovieFailed) {
-          return const Center(
-            child: Text('Failed to fetch movies'),
+          return Center(
+            child: ReusableButton(
+              label: 'Retry',
+              onPressed: () {
+                Navigator.pushNamed(context, CreateMoviePage.id);
+              },
+            ),
           );
         }
 
@@ -68,7 +75,7 @@ class MovieLoadedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return movies.data.isEmpty ? _emptyMoviesData(context) : _notEmptyWidget();
+    return movies.data!.isEmpty ? _emptyMoviesData(context) : _notEmptyWidget();
   }
 
   _emptyMoviesData(BuildContext context) {
@@ -98,7 +105,7 @@ class MovieLoadedWidget extends StatelessWidget {
 
   _notEmptyWidget() {
     return ListView.builder(
-        itemCount: movies.data.length,
+        itemCount: movies.data!.length,
         itemBuilder: (context, index) {
           return const CircleAvatar();
         });

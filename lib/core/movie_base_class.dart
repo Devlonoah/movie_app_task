@@ -9,7 +9,7 @@ abstract class MovieBaseClass {
 
   /// Create
   Future createMovie(
-      {required String name, required String year, required File file});
+      {required String name, required String year, required String imagePath});
 
   /// Read
   Future getMovie();

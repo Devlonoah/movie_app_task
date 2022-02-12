@@ -16,6 +16,15 @@ class MovieRepository {
 
   //create
 
+  Future<void> createMovie(
+      {required String name,
+      required String year,
+      required String imagePath}) async {
+    var result = await remoteDataSource.createMovie(
+        name: name, year: year, imagePath: imagePath);
+    return result;
+  }
+
   //update
 
   //delete

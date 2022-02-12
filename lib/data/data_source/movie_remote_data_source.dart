@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -25,28 +26,44 @@ class MovieRemoteDataSource implements MovieBaseClass {
         headers: header);
 
     if (response.statusCode == 200) {
-      return MovieResultModel.fromJson(response.body);
+      return MovieResultModel.fromJson(jsonDecode(response.body));
     }
 
     throw MovieFetchException;
   }
 
   @override
-  Future createMovie(
-      {required String name, required String year, required File file}) async {
+  Future<void> createMovie(
+      {required String name,
+      required String year,
+      required String imagePath}) async {
+    final jwt = await storage.read(key: AppKey.jwtToken);
     http.MultipartRequest request =
-        http.MultipartRequest('POST', Uri.parse(baseUrl + "/api/movies"));
+        http.MultipartRequest("POST", Uri.parse(baseUrl + "/movies"));
 
-    request.fields.addAll({'data': name, "publicationYear": year});
+    final body = {'data': """name":"salt", "publicationYear": 2008"""};
+    request.fields.addAll(body);
 
-    request.files
-        .add(await http.MultipartFile.fromPath('files.poster', file.path));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "Bearer +$jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data",
+    });
 
-    final result = await request.send();
+    print("path passed is $imagePath");
 
-    final response = await http.Response.fromStream(result);
+    var _image = await http.MultipartFile.fromPath('files.poster', imagePath,
+        filename: 'img11');
+    request.files.add(_image);
 
-    return response;
+    final result = await request
+        .send()
+        .then((value) => print("status code : ${value.statusCode}"));
+
+    // if (response.statusCode != 200) {
+    //   throw MovieCreateException();
+    // }
+    // print("create movie  reason : ${response.reasonPhrase}");
+    // print("create movie status code : ${response.statusCode}");
   }
 
   @override
@@ -75,3 +92,5 @@ class MovieRemoteDataSource implements MovieBaseClass {
 }
 
 class MovieFetchException implements Exception {}
+
+class MovieCreateException implements Exception {}

@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
 import 'package:movie_app_task/data/data_source/movie_remote_data_source.dart';
 import 'package:movie_app_task/data/repository/movie_repository.dart';
@@ -23,6 +24,8 @@ Future<void> initializeInjection() async {
   getIt.registerLazySingleton(() => client.Client());
 
   getIt.registerLazySingleton(() => const FlutterSecureStorage());
+
+  getIt.registerLazySingleton(() => ImagePicker());
 
   getIt.registerLazySingleton(() => AuthenticationDataSource());
   getIt.registerLazySingleton(() => UserRepository(

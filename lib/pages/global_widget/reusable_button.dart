@@ -19,7 +19,7 @@ class ReusableButton extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Text(
           label,
           style: Theme.of(context)
