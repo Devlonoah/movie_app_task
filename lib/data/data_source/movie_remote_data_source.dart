@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app_task/core/keys.dart';
 import 'package:movie_app_task/data/models/movie_model.dart';
-import 'package:movie_app_task/data/repository/configuration_repository.dart';
 
 import '../../core/movie_base_class.dart';
 
@@ -26,7 +24,7 @@ class MovieRemoteDataSource implements MovieBaseClass {
         headers: header);
 
     if (response.statusCode == 200) {
-      return MovieResultModel.fromJson(jsonDecode(response.body));
+      return MovieResultModel.fromJson(response.body);
     }
 
     throw MovieFetchException;
@@ -36,23 +34,21 @@ class MovieRemoteDataSource implements MovieBaseClass {
   Future<void> createMovie(
       {required String name,
       required String year,
-      required String imagePath}) async {
+      required File imageFile}) async {
     final jwt = await storage.read(key: AppKey.jwtToken);
     http.MultipartRequest request =
         http.MultipartRequest("POST", Uri.parse(baseUrl + "/movies"));
 
-    final body = {'data': """name":"salt", "publicationYear": 2008"""};
-    request.fields.addAll(body);
+    request.fields['data'] = '{"name": BAmboone", "publicationYear": 2020}';
 
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "Bearer +$jwt",
       HttpHeaders.contentTypeHeader: "multipart/form-data",
     });
 
-    print("path passed is $imagePath");
-
-    var _image = await http.MultipartFile.fromPath('files.poster', imagePath,
-        filename: 'img11');
+    var _image = await http.MultipartFile.fromPath(
+        'files.poster', imageFile.path,
+        filename: imageFile.path);
     request.files.add(_image);
 
     final result = await request

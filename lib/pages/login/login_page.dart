@@ -239,7 +239,7 @@ class ReusableTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final String errorText;
   final bool readOnly;
-
+  final TextEditingController? textEditingController;
   final TextInputType inputType;
   const ReusableTextField({
     Key? key,
@@ -248,6 +248,7 @@ class ReusableTextField extends StatelessWidget {
     required this.errorText,
     this.readOnly = false,
     this.inputType = TextInputType.name,
+    this.textEditingController,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -255,6 +256,7 @@ class ReusableTextField extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.1,
       child: Center(
         child: TextField(
+          controller: textEditingController,
           keyboardType: inputType,
           readOnly: readOnly,
           textAlign: TextAlign.left,

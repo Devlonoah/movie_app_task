@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:movie_app_task/data/data_source/movie_remote_data_source.dart';
 import 'package:movie_app_task/data/models/movie_model.dart';
 
@@ -19,9 +21,9 @@ class MovieRepository {
   Future<void> createMovie(
       {required String name,
       required String year,
-      required String imagePath}) async {
+      required File imageFile}) async {
     var result = await remoteDataSource.createMovie(
-        name: name, year: year, imagePath: imagePath);
+        name: name, year: year, imageFile: imageFile);
     return result;
   }
 

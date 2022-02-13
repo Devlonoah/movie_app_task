@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -33,7 +34,7 @@ class MovieFormBloc
     });
 
     imageStream = imageFieldBloc.stream.listen((_) {
-      add(MovieFormEvent(imagePath: _));
+      add(MovieFormEvent(imageFile: _));
     });
 
     on<MovieFormEvent>((event, emit) {
@@ -45,12 +46,12 @@ class MovieFormBloc
         emit(ValidState(MovieDetails(
             title: titleFieldBloc.state.data,
             publishYear: publishYearBloc.state.data,
-            imagePath: imageFieldBloc.state.data)));
+            imageFile: imageFieldBloc.state.data!)));
       } else {
         emit(ValidState(MovieDetails(
             title: titleFieldBloc.state.data,
             publishYear: publishYearBloc.state.data,
-            imagePath: imageFieldBloc.state.data)));
+            imageFile: imageFieldBloc.state.data!)));
       }
     });
   }
@@ -59,14 +60,14 @@ class MovieFormBloc
 class MovieDetails {
   final String title;
   final String publishYear;
-  final String imagePath;
+  final File imageFile;
   MovieDetails({
     required this.title,
     required this.publishYear,
-    required this.imagePath,
+    required this.imageFile,
   });
 
   static MovieDetails initialState() {
-    return MovieDetails(title: '', publishYear: '', imagePath: '');
+    return MovieDetails(title: '', publishYear: '', imageFile: File(''));
   }
 }

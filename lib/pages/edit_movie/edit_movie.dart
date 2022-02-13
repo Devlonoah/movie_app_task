@@ -11,6 +11,7 @@ import 'package:movie_app_task/bloc/movie_form/image_field/image_field_bloc.dart
 import 'package:movie_app_task/bloc/movie_form/movie_form/movie_form_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/publish_year_field/publish_year_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/title_field/title_field_bloc.dart';
+import 'package:movie_app_task/data/models/movie_model.dart';
 import 'package:movie_app_task/data/repository/movie_repository.dart';
 import 'package:movie_app_task/injection.dart';
 import 'package:movie_app_task/pages/global_widget/reusable_button.dart';
@@ -19,33 +20,36 @@ import 'package:movie_app_task/pages/login/login_page.dart';
 import 'package:movie_app_task/theme/color.dart';
 import 'package:movie_app_task/theme/constants.dart';
 
-class CreateMoviePage extends StatelessWidget {
-  final String? imageUrl;
-  static String id = "CreateMoviePage";
-  const CreateMoviePage({
-    Key? key,
-    this.imageUrl,
-  }) : super(key: key);
+class EditMoviePage extends StatelessWidget {
+  static String id = "EditMoviePage";
+  const EditMoviePage({Key? key, this.movies}) : super(key: key);
 
+  final Movies? movies;
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        resizeToAvoidBottomInset: false,
-        extendBody: true,
-        body: CreateMoviePageBody());
+    return Scaffold(
+      body: EditMovieBody(
+        movie: movies!,
+      ),
+    );
   }
 }
 
-class CreateMoviePageBody extends StatefulWidget {
-  const CreateMoviePageBody({
+class EditMovieBody extends StatefulWidget {
+  final Movies movie;
+  const EditMovieBody({
     Key? key,
+    required this.movie,
   }) : super(key: key);
 
   @override
-  State<CreateMoviePageBody> createState() => _CreateMoviePageBodyState();
+  State<EditMovieBody> createState() => _EditMovieBodyState();
 }
 
-class _CreateMoviePageBodyState extends State<CreateMoviePageBody> {
+class _EditMovieBodyState extends State<EditMovieBody> {
+  late TextEditingController nameTextEditingController;
+  late TextEditingController publicationYearTextEditingController;
+
   late TitleFieldBloc _titleFieldBloc;
   late PublishYearBloc _publishYearBloc;
   late ImageFieldBloc _imageFieldBloc;
@@ -57,6 +61,11 @@ class _CreateMoviePageBodyState extends State<CreateMoviePageBody> {
   @override
   void initState() {
     super.initState();
+
+    nameTextEditingController =
+        TextEditingController(text: widget.movie.attributes.name);
+    publicationYearTextEditingController =
+        TextEditingController(text: widget.movie.attributes.publicationYear);
 
     _titleFieldBloc = TitleFieldBloc(InitialState(''));
 
@@ -118,7 +127,12 @@ class _CreateMoviePageBodyState extends State<CreateMoviePageBody> {
                 right: 0,
                 left: 0,
                 bottom: _mediaQuery.height * 0.00,
-                child: const InputAndForm(),
+                child: InputAndForm(
+                  nameTextEditingController: nameTextEditingController,
+                  publicationYearTextEditingController:
+                      publicationYearTextEditingController,
+                  movie: widget.movie,
+                ),
               ),
             ]),
           );
@@ -129,9 +143,17 @@ class _CreateMoviePageBodyState extends State<CreateMoviePageBody> {
 }
 
 class InputAndForm extends StatelessWidget {
-  const InputAndForm({
+  InputAndForm({
     Key? key,
+    required this.nameTextEditingController,
+    required this.publicationYearTextEditingController,
+    required this.movie,
   }) : super(key: key);
+
+  late TextEditingController nameTextEditingController;
+  late TextEditingController publicationYearTextEditingController;
+
+  final Movies movie;
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +168,7 @@ class InputAndForm extends StatelessWidget {
             children: [
               const SizedBox(height: kkHeightFromTop),
               Text(
-                'Create a new movie',
+                'Edit movie',
                 style: Theme.of(context)
                     .textTheme
                     .headline3
@@ -159,6 +181,7 @@ class InputAndForm extends StatelessWidget {
               BlocBuilder<TitleFieldBloc, ValidationState<String>>(
                 builder: (context, state) {
                   return ReusableTextField(
+                      textEditingController: nameTextEditingController,
                       hintText: 'Title',
                       onChanged: (x) => context.read<TitleFieldBloc>().add(x),
                       errorText: state is InvalidState ? 'Invalid title' : '');
@@ -170,13 +193,15 @@ class InputAndForm extends StatelessWidget {
               BlocBuilder<PublishYearBloc, ValidationState<String>>(
                 builder: (context, state) {
                   return ReusableTextField(
+                      textEditingController:
+                          publicationYearTextEditingController,
                       inputType: TextInputType.number,
                       hintText: 'Publish year',
                       onChanged: (x) {
                         context.read<PublishYearBloc>().add(x);
                       },
                       errorText: state is InvalidState
-                          ? 'Invalid year .example 2022'
+                          ? 'Invalid year ..example 2022'
                           : '');
                 },
               ),
@@ -186,36 +211,68 @@ class InputAndForm extends StatelessWidget {
 
               BlocBuilder<ImageFieldBloc, ValidationState<File?>>(
                 builder: (context, state) {
-                  // if (movieOptionEnum == MovieOptionEnum.edit) {
-                  //   if (state is InitialState) {
-                  //     return GestureDetector(
-                  //         onTap: () => context
-                  //             .read<ImageFieldBloc>()
-                  //             .add(const ImageFieldEvent()),
-                  //         child: Image.network('passed image url'));
-                  //   } else {
-                  //     GestureDetector(
-                  //       onTap: () => context
-                  //           .read<ImageFieldBloc>()
-                  //           .add(const ImageFieldEvent()),
-                  //       child: DottedBorder(
-                  //         color: AppColor.whiteColor,
-                  //         borderType: BorderType.RRect,
-                  //         radius: const Radius.circular(kkBorderRadius),
-                  //         child: Container(
-                  //             height: _mediaQuery.height * 0.25,
-                  //             decoration: BoxDecoration(
-                  //               color: AppColor.whiteColor.withOpacity(0.1),
-                  //               border: Border.all(
-                  //                 color: AppColor.whiteColor,
-                  //                 style: BorderStyle.none,
-                  //               ),
-                  //             ),
-                  //             child: Image.file(state.data!)),
-                  //       ),
-                  //     );
-                  //   }
-                  // }
+                  if (state is InitialState) {
+                    return GestureDetector(
+                        onTap: () => context
+                            .read<ImageFieldBloc>()
+                            .add(const ImageFieldEvent()),
+                        child: DottedBorder(
+                          color: AppColor.whiteColor,
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(kkBorderRadius),
+                          child: SizedBox(
+                              height: _mediaQuery.height * 0.25,
+                              width: double.infinity,
+                              child: Image.network(
+                                movie.attributes.poster!.large!,
+
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                // loadingBuilder:
+                                //     (context, child, loadingProgress) {
+                                //   return const Center(
+                                //       child: CircularProgressIndicator(
+                                //     color: AppColor.primaryColor,
+                                //   ));
+                                // },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                      child: Text(
+                                    'Upload an image here',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        ?.copyWith(color: AppColor.whiteColor),
+                                  ));
+                                },
+                              )),
+                        ));
+                  } else {
+                    GestureDetector(
+                      onTap: () => context
+                          .read<ImageFieldBloc>()
+                          .add(const ImageFieldEvent()),
+                      child: DottedBorder(
+                        color: AppColor.whiteColor,
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(kkBorderRadius),
+                        child: Container(
+                            height: _mediaQuery.height * 0.25,
+                            width: _mediaQuery.width,
+                            decoration: BoxDecoration(
+                              color: AppColor.whiteColor.withOpacity(0.1),
+                              border: Border.all(
+                                color: AppColor.whiteColor,
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                            child: Image.file(
+                              state.data!,
+                              fit: BoxFit.fill,
+                            )),
+                      ),
+                    );
+                  }
 
                   return GestureDetector(
                     onTap: () => context
@@ -271,19 +328,29 @@ class InputAndForm extends StatelessWidget {
                 children: [
                   const Expanded(child: ButtonWithBorder()),
                   const SizedBox(width: 15),
-                  Expanded(
-                      child: ReusableButton(
-                    label: 'Submit',
-                    onPressed: () {
-                      final state =
-                          BlocProvider.of<MovieFormBloc>(context).state.data;
+                  BlocBuilder<MovieFormBloc, ValidationState>(
+                    builder: (context, state) {
+                      return Expanded(
+                        child: ReusableButton(
+                          label: 'Submit',
+                          onPressed: state is ValidState
+                              ? () {
+                                  final state =
+                                      BlocProvider.of<MovieFormBloc>(context)
+                                          .state
+                                          .data;
 
-                      context.read<MovieCrudBloc>().add(MovieAddedEvent(
-                          title: state.title,
-                          productionYear: state.publishYear,
-                          imagePath: state.imageFile));
+                                  context.read<MovieCrudBloc>().add(
+                                      MovieAddedEvent(
+                                          title: state.title,
+                                          productionYear: state.publishYear,
+                                          imagePath: state.imageFile));
+                                }
+                              : null,
+                        ),
+                      );
                     },
-                  )),
+                  ),
                 ],
               ),
               const SizedBox(height: 15),
@@ -301,7 +368,9 @@ class ButtonWithBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context);
+      },
       child: const Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0),
         child: Text('Cancel'),

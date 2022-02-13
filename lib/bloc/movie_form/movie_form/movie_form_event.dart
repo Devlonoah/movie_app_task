@@ -4,11 +4,11 @@ class MovieFormEvent {
   const MovieFormEvent({
     this.title,
     this.publishYear,
-    this.imagePath,
+    this.imageFile,
   });
 
   final ValidationState<String>? title;
 
   final ValidationState<String>? publishYear;
-  final ValidationState<String>? imagePath;
+  final ValidationState<File?>? imageFile;
 }

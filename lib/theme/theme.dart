@@ -15,7 +15,6 @@ const customTextTheme = TextTheme(
   headline3: TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w600,
-    height: 0,
   ),
   headline4: TextStyle(
     fontSize: 24,

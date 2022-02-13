@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:movie_app_task/data/repository/movie_repository.dart';
@@ -14,7 +16,7 @@ class MovieCrudBloc extends Bloc<MovieCrudEvent, MovieCrudState> {
         var result = await movieRepository.createMovie(
           name: event.title,
           year: event.productionYear,
-          imagePath: event.imagePath,
+          imageFile: event.imagePath,
         );
 
         emit(MovieCrudSuccessful());

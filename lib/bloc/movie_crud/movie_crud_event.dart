@@ -16,5 +16,5 @@ class MovieAddedEvent extends MovieCrudEvent {
 
   final String title;
   final String productionYear;
-  final String imagePath;
+  final File imagePath;
 }

@@ -1,6 +1,6 @@
 ///Use for horizontal padding
 ///
-const kkMargin = 16.0;
+const kkMargin = 24.0; //previously 16.0
 
 ///Major borderRadius used
 

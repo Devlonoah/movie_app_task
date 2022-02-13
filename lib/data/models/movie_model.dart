@@ -1,169 +1,160 @@
+import 'dart:convert';
+
 class MovieResultModel {
-  MovieResultModel({
-    required this.data,
-    required this.meta,
-  });
-  List<Data>? data;
-  Meta? meta;
+  final List<Movies>? movieResult;
 
-  MovieResultModel.fromJson(Map<String, dynamic> json) {
-    data = List.from(json['data']).map((e) => Data.fromJson(e)).toList();
-    meta = Meta.fromJson(json['meta']);
+  MovieResultModel(this.movieResult);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'data': movieResult?.map((x) => x.toMap()).toList(),
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['data'] = data!.map((e) => e.toJson()).toList();
-    _data['meta'] = meta!.toJson();
-    return _data;
+  factory MovieResultModel.fromMap(Map<String, dynamic> map) {
+    return MovieResultModel(
+      map['data'] != null
+          ? List<Movies>.from(map['data']?.map((x) => Movies.fromMap(x)))
+              .toList()
+          : [],
+    );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory MovieResultModel.fromJson(String source) =>
+      MovieResultModel.fromMap(json.decode(source));
 }
 
-class Data {
-  Data({
-    required this.id,
-    required this.attributes,
-  });
-  int? id;
-  Attributes? attributes;
+class Movies {
+  final String id;
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    attributes = Attributes.fromJson(json['attributes']);
+  final Attributes attributes;
+
+  Movies(this.id, this.attributes);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'attributes': attributes.toMap(),
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['attributes'] = attributes!.toJson();
-    return _data;
+  factory Movies.fromMap(Map<String, dynamic> map) {
+    return Movies(
+      map['id'].toString() ?? '',
+      Attributes.fromMap(map['attributes']),
+    );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory Movies.fromJson(String source) => Movies.fromMap(json.decode(source));
 }
 
+//attributes
 class Attributes {
+  final String name;
+  final String publicationYear;
+
+  final Poster? poster;
+
   Attributes({
     required this.name,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.publishedAt,
     required this.publicationYear,
-    required this.genres,
-    required this.owner,
-    required this.poster,
+    this.poster,
   });
-  String? name;
-  String? createdAt;
-  String? updatedAt;
-  String? publishedAt;
-  int? publicationYear;
-  Genres? genres;
-  Owner? owner;
-  Poster? poster;
 
-  Attributes.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    publishedAt = json['publishedAt'];
-    publicationYear = json['publicationYear'];
-    genres = Genres.fromJson(json['genres']);
-    owner = Owner.fromJson(json['owner']);
-    poster = Poster.fromJson(json['poster']);
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'publicationYear': publicationYear,
+      'poster': poster?.toMap(),
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['name'] = name;
-    _data['createdAt'] = createdAt;
-    _data['updatedAt'] = updatedAt;
-    _data['publishedAt'] = publishedAt;
-    _data['publicationYear'] = publicationYear;
-    _data['genres'] = genres?.toJson();
-    _data['owner'] = owner?.toJson();
-    _data['poster'] = poster?.toJson();
-    return _data;
-  }
-}
-
-class Genres {
-  Genres({
-    required this.data,
-  });
-  List<dynamic>? data;
-
-  Genres.fromJson(Map<String, dynamic> json) {
-    data = List.castFrom<dynamic, dynamic>(json['data']);
+  factory Attributes.fromMap(Map<String, dynamic> map) {
+    return Attributes(
+      name: map['name'] ?? '',
+      publicationYear: map['publicationYear'].toString() ?? '',
+      poster: map['poster']['data']['attributes']['formats'] != null
+          ? Poster.fromMap(map['poster']['data']['attributes']['formats'])
+          : null,
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['data'] = data;
-    return _data;
-  }
-}
+  String toJson() => json.encode(toMap());
 
-class Owner {
-  Owner({
-    required this.data,
-  });
-  Data? data;
-
-  Owner.fromJson(Map<String, dynamic> json) {
-    data = Data.fromJson(json['data']);
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['data'] = data?.toJson();
-    return _data;
-  }
+  factory Attributes.fromJson(String source) =>
+      Attributes.fromMap(json.decode(source));
 }
 
 class Poster {
-  Poster({
-    required this.data,
-  });
-  Data? data;
+  final String? large;
 
-  Poster.fromJson(Map<String, dynamic> json) {
-    data = Data.fromJson(json['data']);
+  final String? small;
+
+  final String? medium;
+
+  final String? thumbnail;
+
+  Poster(
+    this.large,
+    this.small,
+    this.medium,
+    this.thumbnail,
+  );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'large': large,
+      'small': small,
+      'medium': medium,
+      'thumbnail': thumbnail,
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['data'] = data?.toJson();
-    return _data;
+  factory Poster.fromMap(Map<String, dynamic> map) {
+    return Poster(
+      map['large']['url'],
+      map['small']['url'],
+      map['medium']['url'],
+      map['thumbnail']['url'],
+    );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory Poster.fromJson(String source) => Poster.fromMap(json.decode(source));
 }
 
 class Meta {
-  Meta({
-    required this.pagination,
-  });
   Pagination? pagination;
 
+  Meta({this.pagination});
+
   Meta.fromJson(Map<String, dynamic> json) {
-    pagination = Pagination.fromJson(json['pagination']);
+    pagination = json['pagination'] != null
+        ? Pagination.fromJson(json['pagination'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['pagination'] = pagination?.toJson();
-    return _data;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (pagination != null) {
+      data['pagination'] = pagination!.toJson();
+    }
+    return data;
   }
 }
 
 class Pagination {
-  Pagination({
-    required this.page,
-    required this.pageSize,
-    required this.pageCount,
-    required this.total,
-  });
   int? page;
   int? pageSize;
   int? pageCount;
   int? total;
+
+  Pagination({this.page, this.pageSize, this.pageCount, this.total});
 
   Pagination.fromJson(Map<String, dynamic> json) {
     page = json['page'];
@@ -173,11 +164,11 @@ class Pagination {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['page'] = page;
-    _data['pageSize'] = pageSize;
-    _data['pageCount'] = pageCount;
-    _data['total'] = total;
-    return _data;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['page'] = this.page;
+    data['pageSize'] = this.pageSize;
+    data['pageCount'] = this.pageCount;
+    data['total'] = this.total;
+    return data;
   }
 }
