@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
 import 'package:movie_app_task/bloc/form_bloc/field_bloc/email_field_bloc.dart';
 
 import 'package:movie_app_task/bloc/form_bloc/field_bloc/password_bloc.dart';
 import 'package:movie_app_task/bloc/form_bloc/field_bloc/remember_checkbox_cubit.dart';
 import 'package:movie_app_task/bloc/form_bloc/login_form/login_form_bloc.dart';
 import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
-import 'package:movie_app_task/data/data_source/authentication_data_source.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_button.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_curves.dart';
+import 'package:movie_app_task/functions/show_snackbar.dart';
+import 'package:movie_app_task/pages/global_widget/barrel.dart';
 
-import 'package:movie_app_task/theme/color.dart';
-import 'package:movie_app_task/theme/constants.dart';
-import 'package:movie_app_task/theme/theme.dart';
+import 'package:movie_app_task/pages/home/home.dart';
+import 'package:movie_app_task/pages/login/remember_me.dart';
+import 'package:movie_app_task/theme/barrel.dart';
 
 class LoginPage extends StatelessWidget {
   static String id = "LoginPage";
@@ -65,21 +65,22 @@ class _LoginPageBodyState extends State<LoginPageBody> {
   @override
   Widget build(BuildContext context) {
     final _mq = MediaQuery.of(context);
-    final authDataSource = AuthenticationDataSource();
 
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is AuthenticationSuccessful) {
-          print("oya navigate to home screen");
+          navigateToHome(context);
         }
 
         if (state is AuthenticationFailed) {
-          print("show snackbar to display error");
+          showSnackBar(context: context, message: 'Authentication failed');
         }
       },
-      child: LoadingOverlay(
-        isLoading: context.watch<AuthenticationBloc>().state
-            is AuthenticationInProgress,
+      builder: (context, state) => LoadingOverlay(
+        isLoading: state is AuthenticationInProgress,
+        opacity: kkLoadingBackgroundOpacity,
+        color: AppColor.kkLoadingBackgroundColor,
+        progressIndicator: const CustomLoadingWidget(),
         child: SafeArea(
           child: Stack(
             alignment: Alignment.center,
@@ -101,7 +102,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                           Center(child: _boldheader(context)),
                           const SizedBox(height: 40),
 
-                          //Email textInput
+                          //Email text Input
 
                           BlocBuilder<EmailFieldBloc, ValidationState>(
                             bloc: _emailFieldBloc,
@@ -140,8 +141,7 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                               ValidationState<bool>>(
                             bloc: _checkboxBloc,
                             builder: (context, state) {
-                              print("checkbox value $state");
-                              return _rememberMe(
+                              return rememberMe(
                                   context: context,
                                   onTap: () => _checkboxBloc.add(!state.data),
                                   color: state is ValidState
@@ -161,12 +161,13 @@ class _LoginPageBodyState extends State<LoginPageBody> {
                                 label: "LOG IN",
                                 onPressed: state is ValidState
                                     ? () {
-                                        context
-                                            .read<AuthenticationBloc>()
-                                            .login(
-                                              email: state.data.email,
-                                              password: state.data.password,
-                                              rememberMe: state.data.rememberMe,
+                                        context.read<AuthenticationBloc>().add(
+                                              AuthenticateWithEmailAndPassword(
+                                                email: state.data.email,
+                                                password: state.data.password,
+                                                rememberMe:
+                                                    state.data.rememberMe,
+                                              ),
                                             );
                                       }
                                     : null,
@@ -187,42 +188,6 @@ class _LoginPageBodyState extends State<LoginPageBody> {
     );
   }
 
-  Row _rememberMe(
-      {void Function()? onTap,
-      required BuildContext context,
-      required Color color}) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: Material(
-            color: color,
-            child: InkWell(
-              onTap: onTap,
-              child: Container(
-                decoration: BoxDecoration(
-                    // color: Colors.grey,
-                    borderRadius: BorderRadius.circular(5)),
-                width: 20,
-                height: 20,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          'Remember me',
-          style: Theme.of(context)
-              .textTheme
-              .subtitle1
-              ?.copyWith(color: AppColor.whiteColor),
-        ),
-      ],
-    );
-  }
-
   Text _boldheader(BuildContext context) {
     return Text(
       'Sign In',
@@ -234,55 +199,5 @@ class _LoginPageBodyState extends State<LoginPageBody> {
   }
 }
 
-class ReusableTextField extends StatelessWidget {
-  final String hintText;
-  final void Function(String)? onChanged;
-  final String errorText;
-  final bool readOnly;
-  final TextEditingController? textEditingController;
-  final TextInputType inputType;
-  const ReusableTextField({
-    Key? key,
-    required this.hintText,
-    this.onChanged,
-    required this.errorText,
-    this.readOnly = false,
-    this.inputType = TextInputType.name,
-    this.textEditingController,
-  }) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.1,
-      child: Center(
-        child: TextField(
-          controller: textEditingController,
-          keyboardType: inputType,
-          readOnly: readOnly,
-          textAlign: TextAlign.left,
-          style:
-              customTextTheme.bodyText2?.copyWith(color: AppColor.whiteColor),
-          onChanged: onChanged,
-          expands: true,
-          minLines: null,
-          maxLines: null,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: const EdgeInsets.all(12),
-            errorText: errorText,
-            fillColor: AppColor.inputColor,
-            filled: true,
-            border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(kkBorderRadius)),
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            hintText: hintText,
-            hintStyle:
-                customTextTheme.subtitle2?.copyWith(color: AppColor.whiteColor),
-          ),
-        ),
-      ),
-    );
-  }
-}
+void navigateToHome(BuildContext context) =>
+    Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);

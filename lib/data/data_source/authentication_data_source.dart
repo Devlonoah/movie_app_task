@@ -14,10 +14,17 @@ class AuthenticationDataSource {
     };
     final response = await post(Uri.parse(baseUrl), body: body, headers: {
       HttpHeaders.acceptEncodingHeader: "application/json",
+      HttpHeaders.contentTypeHeader: "application/x-www-form-urlencoded",
     });
     print("response body: ${response.body}");
     print("response body ${response.statusCode}");
 
-    return UserModel.fromMap(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return UserModel.fromMap(jsonDecode(response.body));
+    } else {
+      throw AuthException();
+    }
   }
 }
+
+class AuthException implements Exception {}

@@ -42,7 +42,7 @@ class Movies {
 
   factory Movies.fromMap(Map<String, dynamic> map) {
     return Movies(
-      map['id'].toString() ?? '',
+      map['id'].toString(),
       Attributes.fromMap(map['attributes']),
     );
   }
@@ -76,9 +76,9 @@ class Attributes {
   factory Attributes.fromMap(Map<String, dynamic> map) {
     return Attributes(
       name: map['name'] ?? '',
-      publicationYear: map['publicationYear'].toString() ?? '',
-      poster: map['poster']['data']['attributes']['formats'] != null
-          ? Poster.fromMap(map['poster']['data']['attributes']['formats'])
+      publicationYear: map['publicationYear'].toString(),
+      poster: map['poster']['data']['attributes'] != null
+          ? Poster.fromMap(map['poster']['data']['attributes'])
           : null,
     );
   }
@@ -90,36 +90,19 @@ class Attributes {
 }
 
 class Poster {
-  final String? large;
-
-  final String? small;
-
-  final String? medium;
-
-  final String? thumbnail;
+  final String? url;
 
   Poster(
-    this.large,
-    this.small,
-    this.medium,
-    this.thumbnail,
+    this.url,
   );
 
   Map<String, dynamic> toMap() {
-    return {
-      'large': large,
-      'small': small,
-      'medium': medium,
-      'thumbnail': thumbnail,
-    };
+    return {'url': url};
   }
 
   factory Poster.fromMap(Map<String, dynamic> map) {
     return Poster(
-      map['large']['url'],
-      map['small']['url'],
-      map['medium']['url'],
-      map['thumbnail']['url'],
+      map['url'] ?? "",
     );
   }
 

@@ -15,7 +15,11 @@ abstract class MovieBaseClass {
   Future getMovie();
 
   /// Update
-  Future updateMovie();
+  Future updateMovie({
+    required String name,
+    required String year,
+    required File imageFile,
+  });
 
   ///Delete
   Future delete();

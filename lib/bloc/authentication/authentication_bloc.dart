@@ -12,52 +12,92 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc(
-    this.userRepository,
-    this._configurationRepository,
-  ) : super(AuthenticationInitial());
-
   final UserRepository userRepository;
 
   final ConfigurationRepository _configurationRepository;
-  void authenticateWithSavedCredential() async {
-    emit(AuthenticationInProgress());
-    try {
-      emit(AuthenticationSuccessful());
-    } on SocketException {
-      emit(const AuthenticationFailed(errorMessage: "Network Failure"));
-    } catch (e) {
-      emit(const AuthenticationFailed());
-    }
+  AuthenticationBloc(
+    this.userRepository,
+    this._configurationRepository,
+  ) : super(AuthenticationInitial()) {
+    on<AuthenticateWithSavedCredentialEvent>((event, emit) async {
+      emit(AuthenticationInProgress());
+      try {
+        emit(AuthenticationSuccessful());
+      } on SocketException {
+        emit(const AuthenticationFailed(errorMessage: "Network Failure"));
+      } catch (e) {
+        emit(const AuthenticationFailed());
+      }
+    });
+
+    on<AuthenticateWithEmailAndPassword>((event, emit) async {
+      try {
+        emit(AuthenticationInProgress());
+
+        _configurationRepository.setRememberMeStatus(
+          event.rememberMe,
+        );
+
+        final result = await userRepository.login(
+          email: event.email,
+          password: event.password,
+        );
+
+        emit(AuthenticationSuccessful());
+      } catch (e) {
+        emit(const AuthenticationFailed());
+      }
+    });
+
+    on<AuthenticateWithSavedCredential>((event, emit) async {
+      emit(AuthenticationInProgress());
+      var isTokenExist = await userRepository.hasToken();
+      if (isTokenExist) {
+        emit(AuthenticationSuccessful());
+      } else {
+        emit(const AuthenticationFailed());
+      }
+    });
   }
 
-  void login({
-    required String email,
-    required String password,
-    required bool rememberMe,
-  }) {
-    emit(AuthenticationInProgress());
-    try {
-      _configurationRepository.setRememberMeStatus(rememberMe);
+  // void authenticateWithSavedCredential() async {
+  //   emit(AuthenticationInProgress());
+  //   try {
+  //     emit(AuthenticationSuccessful());
+  //   } on SocketException {
+  //     emit(const AuthenticationFailed(errorMessage: "Network Failure"));
+  //   } catch (e) {
+  //     emit(const AuthenticationFailed());
+  //   }
+  // }
 
-      final result = userRepository.login(
-        email: email,
-        password: password,
-      );
+  // void login({
+  //   required String email,
+  //   required String password,
+  //   required bool rememberMe,
+  // }) {
+  //   emit(AuthenticationInProgress());
+  //   try {
+  //     _configurationRepository.setRememberMeStatus(rememberMe);
 
-      emit(AuthenticationSuccessful());
-    } catch (e) {
-      emit(const AuthenticationFailed());
-    }
-  }
+  //     final result = userRepository.login(
+  //       email: email,
+  //       password: password,
+  //     );
 
-  void appStarted() async {
-    emit(AuthenticationInProgress());
-    var isTokenExist = await userRepository.hasToken();
-    if (isTokenExist) {
-      emit(AuthenticationSuccessful());
-    } else {
-      emit(const AuthenticationFailed());
-    }
-  }
+  //     emit(AuthenticationSuccessful());
+  //   } catch (e) {
+  //     emit(const AuthenticationFailed());
+  //   }
+  // }
+
+  // void appStarted() async {
+  //   emit(AuthenticationInProgress());
+  //   var isTokenExist = await userRepository.hasToken();
+  //   if (isTokenExist) {
+  //     emit(AuthenticationSuccessful());
+  //   } else {
+  //     emit(const AuthenticationFailed());
+  //   }
+  // }
 }

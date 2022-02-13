@@ -11,11 +11,12 @@ import 'package:movie_app_task/bloc/movie_form/image_field/image_field_bloc.dart
 import 'package:movie_app_task/bloc/movie_form/movie_form/movie_form_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/publish_year_field/publish_year_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/title_field/title_field_bloc.dart';
+import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
+import 'package:movie_app_task/bloc/movies/movie_event.dart';
 import 'package:movie_app_task/data/repository/movie_repository.dart';
+import 'package:movie_app_task/functions/show_snackbar.dart';
 import 'package:movie_app_task/injection.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_button.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_curves.dart';
-import 'package:movie_app_task/pages/login/login_page.dart';
+import 'package:movie_app_task/pages/global_widget/barrel.dart';
 import 'package:movie_app_task/theme/color.dart';
 import 'package:movie_app_task/theme/constants.dart';
 
@@ -87,25 +88,15 @@ class _CreateMoviePageBodyState extends State<CreateMoviePageBody> {
       child: BlocConsumer<MovieCrudBloc, MovieCrudState>(
         listener: (context, state) {
           if (state is MovieCrudFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: AppColor.errorColor,
-                behavior: SnackBarBehavior.floating,
-                content: Row(
-                  children: [
-                    const Icon(
-                      Icons.cancel_outlined,
-                      color: AppColor.whiteColor,
-                    ),
-                    const SizedBox(width: 8),
-                    Text('Operation failed',
-                        style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.whiteColor))
-                  ],
-                ),
-              ),
-            );
+            showSnackBar(context: context, message: 'OPeration failed');
+          }
+
+          if (state is MovieCrudSuccessful) {
+            //if edit operation is succesfull
+//Make request to [MovieBloc] to fetch updated list of movies from endpoint
+            BlocProvider.of<MovieBloc>(context).add(MovieFetchedEvent());
+
+            navigateBackToHomePage(context);
           }
         },
         builder: (context, state) {
@@ -186,37 +177,6 @@ class InputAndForm extends StatelessWidget {
 
               BlocBuilder<ImageFieldBloc, ValidationState<File?>>(
                 builder: (context, state) {
-                  // if (movieOptionEnum == MovieOptionEnum.edit) {
-                  //   if (state is InitialState) {
-                  //     return GestureDetector(
-                  //         onTap: () => context
-                  //             .read<ImageFieldBloc>()
-                  //             .add(const ImageFieldEvent()),
-                  //         child: Image.network('passed image url'));
-                  //   } else {
-                  //     GestureDetector(
-                  //       onTap: () => context
-                  //           .read<ImageFieldBloc>()
-                  //           .add(const ImageFieldEvent()),
-                  //       child: DottedBorder(
-                  //         color: AppColor.whiteColor,
-                  //         borderType: BorderType.RRect,
-                  //         radius: const Radius.circular(kkBorderRadius),
-                  //         child: Container(
-                  //             height: _mediaQuery.height * 0.25,
-                  //             decoration: BoxDecoration(
-                  //               color: AppColor.whiteColor.withOpacity(0.1),
-                  //               border: Border.all(
-                  //                 color: AppColor.whiteColor,
-                  //                 style: BorderStyle.none,
-                  //               ),
-                  //             ),
-                  //             child: Image.file(state.data!)),
-                  //       ),
-                  //     );
-                  //   }
-                  // }
-
                   return GestureDetector(
                     onTap: () => context
                         .read<ImageFieldBloc>()
@@ -295,26 +255,6 @@ class InputAndForm extends StatelessWidget {
   }
 }
 
-class ButtonWithBorder extends StatelessWidget {
-  const ButtonWithBorder({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.0),
-        child: Text('Cancel'),
-      ),
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        onSurface: Colors.transparent,
-        shadowColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(kkBorderRadius),
-          side: const BorderSide(color: AppColor.whiteColor, width: 1.5),
-        ),
-      ),
-    );
-  }
+void navigateBackToHomePage(BuildContext context) {
+  Navigator.pop(context);
 }

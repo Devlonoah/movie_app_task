@@ -11,14 +11,13 @@ import 'package:movie_app_task/bloc/movie_form/image_field/image_field_bloc.dart
 import 'package:movie_app_task/bloc/movie_form/movie_form/movie_form_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/publish_year_field/publish_year_bloc.dart';
 import 'package:movie_app_task/bloc/movie_form/title_field/title_field_bloc.dart';
+import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
+import 'package:movie_app_task/bloc/movies/movie_event.dart';
 import 'package:movie_app_task/data/models/movie_model.dart';
 import 'package:movie_app_task/data/repository/movie_repository.dart';
 import 'package:movie_app_task/injection.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_button.dart';
-import 'package:movie_app_task/pages/global_widget/reusable_curves.dart';
-import 'package:movie_app_task/pages/login/login_page.dart';
-import 'package:movie_app_task/theme/color.dart';
-import 'package:movie_app_task/theme/constants.dart';
+import 'package:movie_app_task/pages/global_widget/barrel.dart';
+import 'package:movie_app_task/theme/barrel.dart';
 
 class EditMoviePage extends StatelessWidget {
   static String id = "EditMoviePage";
@@ -115,6 +114,13 @@ class _EditMovieBodyState extends State<EditMovieBody> {
                 ),
               ),
             );
+          }
+          if (state is MovieCrudSuccessful) {
+//if edit operation is succesfull
+//Make request to [MovieBloc] to fetch updated list of movies from endpoint
+            BlocProvider.of<MovieBloc>(context).add(MovieFetchedEvent());
+
+            navigateBackToHomePage(context);
           }
         },
         builder: (context, state) {
@@ -224,17 +230,9 @@ class InputAndForm extends StatelessWidget {
                               height: _mediaQuery.height * 0.25,
                               width: double.infinity,
                               child: Image.network(
-                                movie.attributes.poster!.large!,
-
+                                movie.attributes.poster!.url!,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
-                                // loadingBuilder:
-                                //     (context, child, loadingProgress) {
-                                //   return const Center(
-                                //       child: CircularProgressIndicator(
-                                //     color: AppColor.primaryColor,
-                                //   ));
-                                // },
                                 errorBuilder: (context, error, stackTrace) {
                                   return Center(
                                       child: Text(
@@ -386,4 +384,8 @@ class ButtonWithBorder extends StatelessWidget {
       ),
     );
   }
+}
+
+void navigateBackToHomePage(BuildContext context) {
+  Navigator.pop(context);
 }

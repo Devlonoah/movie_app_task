@@ -1,4 +1,4 @@
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 
 class AppColor {
   static const primaryColor = Color(0xFF2BD17E);
@@ -14,4 +14,6 @@ class AppColor {
 
   static final curveOneColor = const Color(0xFFE5E5E5).withOpacity(0.13);
   static final curveTwoColor = const Color(0xFF20DF7F).withOpacity(0.09);
+
+  static const Color kkLoadingBackgroundColor = Colors.black;
 }

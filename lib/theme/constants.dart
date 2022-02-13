@@ -8,3 +8,5 @@ const kkBorderRadius = 10.0;
 
 ///Height from top.
 const kkHeightFromTop = 80.0;
+
+const kkLoadingBackgroundOpacity = 0.3;

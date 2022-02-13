@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
+import 'package:movie_app_task/pages/global_widget/custom_loading_widget.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key? key}) : super(key: key);
@@ -14,7 +16,8 @@ class _AuthenticateState extends State<Authenticate> {
   void initState() {
     super.initState();
 
-    BlocProvider.of<AuthenticationBloc>(context).appStarted();
+    BlocProvider.of<AuthenticationBloc>(context)
+        .add(AuthenticateWithSavedCredential());
   }
 
   @override
@@ -38,7 +41,7 @@ class AuthenticateBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: CircularProgressIndicator(),
+      child: CustomLoadingWidget(),
     );
   }
 }

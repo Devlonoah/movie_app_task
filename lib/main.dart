@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
+import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
 import 'package:movie_app_task/pages/create_movie.dart/create_movie.dart';
 import 'package:movie_app_task/pages/edit_movie/edit_movie.dart';
 import 'package:movie_app_task/pages/home/home.dart';
@@ -44,6 +45,10 @@ class MyApp extends StatelessWidget {
           lazy: false,
           create: (context) => getIt<AuthenticationBloc>(),
         ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => getIt<MovieBloc>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Movie_',
@@ -58,7 +63,7 @@ class MyApp extends StatelessWidget {
           LoginPage.id: (contex) => const LoginPage(),
           HomePage.id: (context) => const HomePage(),
           CreateMoviePage.id: (context) => const CreateMoviePage(),
-          EditMoviePage.id: (context) => EditMoviePage()
+          EditMoviePage.id: (context) => const EditMoviePage()
         },
         initialRoute: LandingPage.id,
         debugShowCheckedModeBanner: false,

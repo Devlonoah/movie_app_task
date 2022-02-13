@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
+import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
 import 'package:movie_app_task/bloc/remember_me/remember_me_bloc.dart';
 import 'package:movie_app_task/bloc/remember_me/remember_me_event.dart';
 import 'package:movie_app_task/injection.dart';
+import 'package:movie_app_task/pages/global_widget/barrel.dart';
+
 import 'package:movie_app_task/pages/home/home.dart';
 import 'package:movie_app_task/pages/login/login_page.dart';
 
@@ -37,14 +40,13 @@ class _LandingPageState extends State<LandingPage> {
           BlocListener<RememberMeBloc, RememberMeState>(
             bloc: rememberMeCubit,
             listener: (context, state) {
-              print("remember me statae is $state");
               Navigator.pushNamed(context, LoginPage.id);
               if (state is RememberMeInActive) {
                 _navigateToLoginPage(context);
               }
               if (state is RememberMeActive) {
-                print('navigate to login page');
-                BlocProvider.of<AuthenticationBloc>(context).appStarted();
+                BlocProvider.of<AuthenticationBloc>(context)
+                    .add(AuthenticateWithSavedCredential());
               }
             },
           ),
@@ -62,10 +64,7 @@ class _LandingPageState extends State<LandingPage> {
             }
           })
         ],
-
-        //Remove blocbuilder
-
-        child: const Center(child: CircularProgressIndicator()),
+        child: const Center(child: CustomLoadingWidget()),
       ),
     );
   }

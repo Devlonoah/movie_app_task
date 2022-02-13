@@ -31,35 +31,38 @@ class MovieRemoteDataSource implements MovieBaseClass {
   }
 
   @override
-  Future<void> createMovie(
-      {required String name,
-      required String year,
-      required File imageFile}) async {
+  Future<void> createMovie({
+    required String name,
+    required String year,
+    required File imageFile,
+  }) async {
     final jwt = await storage.read(key: AppKey.jwtToken);
-    http.MultipartRequest request =
-        http.MultipartRequest("POST", Uri.parse(baseUrl + "/movies"));
 
-    request.fields['data'] = '{"name": BAmboone", "publicationYear": 2020}';
+    var stream = http.ByteStream(imageFile.openRead());
 
-    request.headers.addAll({
-      HttpHeaders.authorizationHeader: "Bearer +$jwt",
-      HttpHeaders.contentTypeHeader: "multipart/form-data",
-    });
+    stream.cast();
 
-    var _image = await http.MultipartFile.fromPath(
-        'files.poster', imageFile.path,
-        filename: imageFile.path);
-    request.files.add(_image);
+    var length = await imageFile.length();
 
-    final result = await request
-        .send()
-        .then((value) => print("status code : ${value.statusCode}"));
+    var uri = Uri.parse(baseUrl + "/movies");
 
-    // if (response.statusCode != 200) {
-    //   throw MovieCreateException();
-    // }
-    // print("create movie  reason : ${response.reasonPhrase}");
-    // print("create movie status code : ${response.statusCode}");
+    var request = http.MultipartRequest('POST', uri);
+    // var multiPartFile = http.MultipartFile('files.poster', stream, length,
+    //     filename: imageFile.path);
+    var multiPartFile =
+        await http.MultipartFile.fromPath('files.poster', imageFile.path);
+    request.files.add(multiPartFile);
+
+    request.headers['authorization'] = "Bearer $jwt";
+    request.headers[HttpHeaders.connectionHeader] = 'keep-alive';
+    request.fields['data'] =
+        """{"name": "OPenFlake", "publicationYear": 2023}""";
+
+    var respond = await request.send();
+
+    if (respond.statusCode != 200) {
+      throw MovieFetchException();
+    }
   }
 
   @override
@@ -75,9 +78,37 @@ class MovieRemoteDataSource implements MovieBaseClass {
   }
 
   @override
-  Future updateMovie() {
-    // TODO: implement updateMovie
-    throw UnimplementedError();
+  Future updateMovie({
+    required String name,
+    required String year,
+    required File imageFile,
+  }) async {
+    final jwt = await storage.read(key: AppKey.jwtToken);
+
+    var stream = http.ByteStream(imageFile.openRead());
+
+    stream.cast();
+
+    var length = await imageFile.length();
+
+    var uri = Uri.parse(baseUrl + "/movies");
+
+    var request = http.MultipartRequest('POST', uri);
+    // var multiPartFile = http.MultipartFile('files.poster', stream, length,
+    //     filename: imageFile.path);
+    var multiPartFile =
+        await http.MultipartFile.fromPath('files.poster', imageFile.path);
+    request.files.add(multiPartFile);
+
+    request.headers['authorization'] = "Bearer $jwt";
+    request.headers[HttpHeaders.connectionHeader] = 'keep-alive';
+    request.fields['data'] = """{"name": "$name", "publicationYear": $year}""";
+
+    var respond = await request.send();
+
+    if (respond.statusCode != 200) {
+      throw MovieUpdateException();
+    }
   }
 
   @override
@@ -90,3 +121,5 @@ class MovieRemoteDataSource implements MovieBaseClass {
 class MovieFetchException implements Exception {}
 
 class MovieCreateException implements Exception {}
+
+class MovieUpdateException implements Exception {}
