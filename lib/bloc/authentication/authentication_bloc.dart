@@ -60,44 +60,5 @@ class AuthenticationBloc
     });
   }
 
-  // void authenticateWithSavedCredential() async {
-  //   emit(AuthenticationInProgress());
-  //   try {
-  //     emit(AuthenticationSuccessful());
-  //   } on SocketException {
-  //     emit(const AuthenticationFailed(errorMessage: "Network Failure"));
-  //   } catch (e) {
-  //     emit(const AuthenticationFailed());
-  //   }
-  // }
 
-  // void login({
-  //   required String email,
-  //   required String password,
-  //   required bool rememberMe,
-  // }) {
-  //   emit(AuthenticationInProgress());
-  //   try {
-  //     _configurationRepository.setRememberMeStatus(rememberMe);
-
-  //     final result = userRepository.login(
-  //       email: email,
-  //       password: password,
-  //     );
-
-  //     emit(AuthenticationSuccessful());
-  //   } catch (e) {
-  //     emit(const AuthenticationFailed());
-  //   }
-  // }
-
-  // void appStarted() async {
-  //   emit(AuthenticationInProgress());
-  //   var isTokenExist = await userRepository.hasToken();
-  //   if (isTokenExist) {
-  //     emit(AuthenticationSuccessful());
-  //   } else {
-  //     emit(const AuthenticationFailed());
-  //   }
-  // }
 }

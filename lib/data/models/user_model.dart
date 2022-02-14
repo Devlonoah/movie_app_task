@@ -1,18 +1,5 @@
 import 'dart:convert';
 
-// {
-//     "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNjQ0NDgwOTUwLCJleHAiOjE2NDcwNzI5NTB9.TBkRCzbkJaV5uEJycW1UeUUf733B9dIRxbb9g2Ueo9g",
-//     "user": {
-//         "id": 7,
-//         "username": "devlonoah",
-//         "email": "devlonoah@gmail.com",
-//         "provider": "local",
-//         "confirmed": true,
-//         "blocked": false,
-//         "createdAt": "2022-02-04T16:39:09.919Z",
-//         "updatedAt": "2022-02-04T16:39:09.919Z"
-//     }
-// }
 
 class UserModel {
   final String? jwt;
