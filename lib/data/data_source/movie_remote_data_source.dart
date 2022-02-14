@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:movie_app_task/core/keys.dart';
-import 'package:movie_app_task/data/models/movie_model.dart';
+import '../../core/keys.dart';
+import '../models/movie_model.dart';
 
 import '../../core/movie_base_class.dart';
 
@@ -47,8 +47,7 @@ class MovieRemoteDataSource implements MovieBaseClass {
     var uri = Uri.parse(baseUrl + "/movies");
 
     var request = http.MultipartRequest('POST', uri);
-    // var multiPartFile = http.MultipartFile('files.poster', stream, length,
-    //     filename: imageFile.path);
+
     var multiPartFile =
         await http.MultipartFile.fromPath('files.poster', imageFile.path);
     request.files.add(multiPartFile);
@@ -66,15 +65,24 @@ class MovieRemoteDataSource implements MovieBaseClass {
   }
 
   @override
-  Future delete() {
-    // TODO: implement delete
-    throw UnimplementedError();
-  }
+  Future<void> delete(String id) async {
+    final jwt = await storage.read(key: AppKey.jwtToken);
 
-  @override
-  Future getMovie() {
-    // TODO: implement getMovie
-    throw UnimplementedError();
+    var request = http.Request(
+        'DELETE',
+        Uri.parse(
+            'https://zm-movies-assignment.herokuapp.com/api/movies/:$id'));
+
+    request.headers['authorization'] = 'Bearer $jwt';
+    request.headers[HttpHeaders.connectionHeader] = 'keep-alive';
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   @override
@@ -123,3 +131,5 @@ class MovieFetchException implements Exception {}
 class MovieCreateException implements Exception {}
 
 class MovieUpdateException implements Exception {}
+
+class MovieDeleteExceoption implements Exception {}

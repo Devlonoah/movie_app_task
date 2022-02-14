@@ -1,9 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/data/data_source/movie_remote_data_source.dart';
-import 'package:movie_app_task/data/repository/movie_repository.dart';
+import 'bloc/authentication/authentication_bloc.dart';
+import 'data/data_source/movie_remote_data_source.dart';
+import 'data/repository/movie_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as client;

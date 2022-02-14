@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:movie_app_task/data/models/movie_model.dart';
+import '../data/models/movie_model.dart';
 
 abstract class MovieBaseClass {
   ///Fetch al movies
@@ -12,7 +12,6 @@ abstract class MovieBaseClass {
       {required String name, required String year, required File imageFile});
 
   /// Read
-  Future getMovie();
 
   /// Update
   Future updateMovie({
@@ -22,9 +21,9 @@ abstract class MovieBaseClass {
   });
 
   ///Delete
-  Future delete();
+  Future delete(String required);
 
-  /// Find one movie by id
+  /// Find one movie by id [get details]
   ///
   ///
   Future findOneMovie(String id);

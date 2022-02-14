@@ -1,5 +1,5 @@
-import 'package:movie_app_task/bloc/form_bloc/field_bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
+import '../field_bloc.dart';
+import '../validation_state.dart';
 
 class PasswordBloc extends FieldBloc<String> {
   PasswordBloc(ValidationState<String> initialState) : super(initialState) {

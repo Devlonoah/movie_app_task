@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_task/theme/color.dart';
+import '../../theme/color.dart';
 
 class ReusableButton extends StatelessWidget {
   const ReusableButton({

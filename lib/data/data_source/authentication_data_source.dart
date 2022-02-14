@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:movie_app_task/data/models/user_model.dart';
+import '../models/user_model.dart';
 
 class AuthenticationDataSource {
   final baseUrl = 'https://zm-movies-assignment.herokuapp.com/api/auth/local';

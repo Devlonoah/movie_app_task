@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
-import 'package:movie_app_task/bloc/movies/movie_event.dart';
-import 'package:movie_app_task/data/models/movie_model.dart';
+import '../../bloc/movies/movie_bloc.dart';
+import '../../bloc/movies/movie_event.dart';
+import '../../data/models/movie_model.dart';
 
-import 'package:movie_app_task/pages/create_movie.dart/create_movie.dart';
-import 'package:movie_app_task/pages/global_widget/barrel.dart';
+import '../create_movie.dart/create_movie.dart';
+import '../global_widget/barrel.dart';
+import '../../theme/barrel.dart';
+import '../../theme/constants.dart';
 
 class HomePage extends StatelessWidget {
   static String id = "HomePage";
@@ -13,9 +15,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
-        child: HomePageBody(),
+        child: Stack(
+          children: const [
+            HomePageBody(),
+            ReusableBottomCurves(),
+          ],
+        ),
       ),
     );
   }
@@ -45,19 +52,39 @@ class _HomePageBodyState extends State<HomePageBody> {
         }
 
         if (state is MovieFailed) {
-          return Center(
-            child: ReusableButton(
-              label: 'Retry',
-              onPressed: () =>
-                  BlocProvider.of<MovieBloc>(context).add(MovieFetchedEvent()),
-            ),
-          );
+          return _moviefailureWidget(context);
         }
 
         return const Center(
           child: CustomLoadingWidget(),
         );
       },
+    );
+  }
+
+  Widget _moviefailureWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kkMargin),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+              child: Text(
+            'Error occured',
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                ?.copyWith(color: AppColor.errorColor),
+          )),
+          const SizedBox(height: 12),
+          ReusableButton(
+            label: 'Retry',
+            onPressed: () =>
+                BlocProvider.of<MovieBloc>(context).add(MovieFetchedEvent()),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -119,7 +146,13 @@ class MovieLoadedWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final _movie = movies.movieResult?[index];
 
-                  return MovieCardWidget(movie: _movie);
+                  return Dismissible(
+                      key: Key(_movie!.id),
+                      onDismissed: (direction) {
+                        BlocProvider.of<MovieBloc>(context)
+                            .add(MovieDeletedEvent(_movie.id));
+                      },
+                      child: MovieCardWidget(movie: _movie));
                 }),
           ),
         ],

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
+import '../../form_bloc/validation_state.dart';
 
 part 'title_field_state.dart';
 

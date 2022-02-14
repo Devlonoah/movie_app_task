@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_task/pages/create_movie.dart/create_movie.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../create_movie.dart/create_movie.dart';
+import '../../theme/barrel.dart';
 
 class CustomHeader extends StatelessWidget {
   const CustomHeader({Key? key}) : super(key: key);

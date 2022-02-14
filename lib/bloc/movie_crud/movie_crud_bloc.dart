@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:movie_app_task/data/repository/movie_repository.dart';
+import '../../data/repository/movie_repository.dart';
 
 part 'movie_crud_event.dart';
 part 'movie_crud_state.dart';

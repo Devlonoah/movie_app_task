@@ -1,9 +1,9 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:movie_app_task/core/keys.dart';
-import 'package:movie_app_task/data/models/user_model.dart';
+import '../../core/keys.dart';
+import '../models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:movie_app_task/data/data_source/authentication_data_source.dart';
+import '../data_source/authentication_data_source.dart';
 
 class UserRepository {
   UserRepository({

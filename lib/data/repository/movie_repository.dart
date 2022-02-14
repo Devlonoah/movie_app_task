@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:movie_app_task/data/data_source/movie_remote_data_source.dart';
-import 'package:movie_app_task/data/models/movie_model.dart';
+import '../data_source/movie_remote_data_source.dart';
+import '../models/movie_model.dart';
 
 class MovieRepository {
   final MovieRemoteDataSource remoteDataSource;
@@ -30,6 +30,12 @@ class MovieRepository {
   //update
 
   //delete
+
+  Future deleteMovie(String id) async {
+    var result = await remoteDataSource.delete(id);
+
+    return result;
+  }
 
   //find_one
 }

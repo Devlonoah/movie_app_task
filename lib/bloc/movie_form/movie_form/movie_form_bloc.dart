@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
-import 'package:movie_app_task/bloc/movie_form/image_field/image_field_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/publish_year_field/publish_year_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/title_field/title_field_bloc.dart';
+import '../../form_bloc/validation_state.dart';
+import '../image_field/image_field_bloc.dart';
+import '../publish_year_field/publish_year_bloc.dart';
+import '../title_field/title_field_bloc.dart';
 
 part 'movie_form_event.dart';
 

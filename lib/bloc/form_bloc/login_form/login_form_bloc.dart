@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/email_field_bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/password_bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/remember_checkbox_cubit.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
+import '../field_bloc/email_field_bloc.dart';
+import '../field_bloc/password_bloc.dart';
+import '../field_bloc/remember_checkbox_cubit.dart';
+import '../validation_state.dart';
 
 part 'login_form_event.dart';
 

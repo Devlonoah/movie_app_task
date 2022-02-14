@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
-import 'package:movie_app_task/pages/create_movie.dart/create_movie.dart';
-import 'package:movie_app_task/pages/edit_movie/edit_movie.dart';
-import 'package:movie_app_task/pages/home/home.dart';
-import 'package:movie_app_task/pages/landing_page/landing_page.dart';
-import 'package:movie_app_task/pages/login/login_page.dart';
-import 'package:movie_app_task/theme/color.dart';
-import 'package:movie_app_task/theme/theme.dart';
+import 'bloc/authentication/authentication_bloc.dart';
+import 'bloc/movies/movie_bloc.dart';
+import 'pages/create_movie.dart/create_movie.dart';
+import 'pages/edit_movie/edit_movie.dart';
+import 'pages/home/home.dart';
+import 'pages/landing_page/landing_page.dart';
+import 'pages/login/login_page.dart';
+import 'theme/color.dart';
+import 'theme/theme.dart';
 
 import 'injection.dart';
 import 'observer.dart';

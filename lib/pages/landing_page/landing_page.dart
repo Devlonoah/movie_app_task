@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
-import 'package:movie_app_task/bloc/remember_me/remember_me_bloc.dart';
-import 'package:movie_app_task/bloc/remember_me/remember_me_event.dart';
-import 'package:movie_app_task/injection.dart';
-import 'package:movie_app_task/pages/global_widget/barrel.dart';
+import '../../bloc/authentication/authentication_bloc.dart';
+import '../../bloc/authentication/authentication_event.dart';
+import '../../bloc/remember_me/remember_me_bloc.dart';
+import '../../bloc/remember_me/remember_me_event.dart';
+import '../../injection.dart';
+import '../global_widget/barrel.dart';
 
-import 'package:movie_app_task/pages/home/home.dart';
-import 'package:movie_app_task/pages/login/login_page.dart';
+import '../home/home.dart';
+import '../login/login_page.dart';
 
 class LandingPage extends StatefulWidget {
   static String id = "LandingPage";

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../../theme/barrel.dart';
 
 Row rememberMe(
     {void Function()? onTap,

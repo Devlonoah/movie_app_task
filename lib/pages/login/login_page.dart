@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/email_field_bloc.dart';
+import '../../bloc/authentication/authentication_bloc.dart';
+import '../../bloc/authentication/authentication_event.dart';
+import '../../bloc/form_bloc/field_bloc/email_field_bloc.dart';
 
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/password_bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/field_bloc/remember_checkbox_cubit.dart';
-import 'package:movie_app_task/bloc/form_bloc/login_form/login_form_bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
-import 'package:movie_app_task/functions/show_snackbar.dart';
-import 'package:movie_app_task/pages/global_widget/barrel.dart';
+import '../../bloc/form_bloc/field_bloc/password_bloc.dart';
+import '../../bloc/form_bloc/field_bloc/remember_checkbox_cubit.dart';
+import '../../bloc/form_bloc/login_form/login_form_bloc.dart';
+import '../../bloc/form_bloc/validation_state.dart';
+import '../../functions/show_snackbar.dart';
+import '../global_widget/barrel.dart';
 
-import 'package:movie_app_task/pages/home/home.dart';
-import 'package:movie_app_task/pages/login/remember_me.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../home/home.dart';
+import 'remember_me.dart';
+import '../../theme/barrel.dart';
 
 class LoginPage extends StatelessWidget {
   static String id = "LoginPage";

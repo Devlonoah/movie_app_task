@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
-import 'package:movie_app_task/bloc/movie_crud/movie_crud_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/image_field/image_field_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/movie_form/movie_form_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/publish_year_field/publish_year_bloc.dart';
-import 'package:movie_app_task/bloc/movie_form/title_field/title_field_bloc.dart';
-import 'package:movie_app_task/bloc/movies/movie_bloc.dart';
-import 'package:movie_app_task/bloc/movies/movie_event.dart';
-import 'package:movie_app_task/data/models/movie_model.dart';
-import 'package:movie_app_task/data/repository/movie_repository.dart';
-import 'package:movie_app_task/injection.dart';
-import 'package:movie_app_task/pages/global_widget/barrel.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../../bloc/form_bloc/validation_state.dart';
+import '../../bloc/movie_crud/movie_crud_bloc.dart';
+import '../../bloc/movie_form/image_field/image_field_bloc.dart';
+import '../../bloc/movie_form/movie_form/movie_form_bloc.dart';
+import '../../bloc/movie_form/publish_year_field/publish_year_bloc.dart';
+import '../../bloc/movie_form/title_field/title_field_bloc.dart';
+import '../../bloc/movies/movie_bloc.dart';
+import '../../bloc/movies/movie_event.dart';
+import '../../data/models/movie_model.dart';
+import '../../data/repository/movie_repository.dart';
+import '../../injection.dart';
+import '../global_widget/barrel.dart';
+import '../../theme/barrel.dart';
 
 class EditMoviePage extends StatelessWidget {
   static String id = "EditMoviePage";
@@ -354,32 +354,6 @@ class InputAndForm extends StatelessWidget {
               const SizedBox(height: 15),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class ButtonWithBorder extends StatelessWidget {
-  const ButtonWithBorder({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.0),
-        child: Text('Cancel'),
-      ),
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        onSurface: Colors.transparent,
-        shadowColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(kkBorderRadius),
-          side: const BorderSide(color: AppColor.whiteColor, width: 1.5),
         ),
       ),
     );

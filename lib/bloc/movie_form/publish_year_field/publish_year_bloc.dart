@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:movie_app_task/bloc/form_bloc/validation_state.dart';
+import '../../form_bloc/validation_state.dart';
 
 class PublishYearBloc extends Bloc<String, ValidationState<String>> {
   PublishYearBloc(InitialState<String> state) : super(state) {

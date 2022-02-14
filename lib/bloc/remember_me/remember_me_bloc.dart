@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:movie_app_task/bloc/remember_me/remember_me_event.dart';
+import 'remember_me_event.dart';
 
-import 'package:movie_app_task/data/repository/configuration_repository.dart';
+import '../../data/repository/configuration_repository.dart';
 
 part 'remember_me_state.dart';
 

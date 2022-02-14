@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:movie_app_task/data/models/movie_model.dart';
-import 'package:movie_app_task/pages/edit_movie/edit_movie.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../../data/models/movie_model.dart';
+import '../edit_movie/edit_movie.dart';
+import '../../theme/barrel.dart';
 
 class MovieCardWidget extends StatelessWidget {
   const MovieCardWidget({

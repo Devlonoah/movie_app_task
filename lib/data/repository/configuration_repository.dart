@@ -1,4 +1,4 @@
-import 'package:movie_app_task/core/keys.dart';
+import '../../core/keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:sharedpreference/sharedpreference.dart';
 

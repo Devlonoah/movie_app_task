@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app_task/theme/barrel.dart';
+import '../../theme/barrel.dart';
 
 class ButtonWithBorder extends StatelessWidget {
   const ButtonWithBorder({Key? key}) : super(key: key);
@@ -7,7 +7,7 @@ class ButtonWithBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () => Navigator.pop(context),
       child: const Padding(
         padding: EdgeInsets.symmetric(vertical: 12.0),
         child: Text('Cancel'),

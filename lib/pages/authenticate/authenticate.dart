@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_bloc.dart';
-import 'package:movie_app_task/bloc/authentication/authentication_event.dart';
-import 'package:movie_app_task/pages/global_widget/custom_loading_widget.dart';
+import '../../bloc/authentication/authentication_bloc.dart';
+import '../../bloc/authentication/authentication_event.dart';
+import '../global_widget/custom_loading_widget.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key? key}) : super(key: key);
