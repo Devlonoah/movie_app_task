@@ -1,16 +1,14 @@
-# movie_app_task
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# <b><h>MOVIE APP</h></b>
+# <b><h5>PACKAGE USED</b></h5>
+cached_network_image<br>
+  dotted_border<br>
+  equatable<br>
+  flutter_bloc:<br> 
+  flutter_secure_storage<br>
+  flutter_sv <br>
+  get_it<br>
+  http <br>
+  jwt_decoder <br>
+  loading_overlay <br>
+  shared_preferences <br>
+  image_picker<br>
