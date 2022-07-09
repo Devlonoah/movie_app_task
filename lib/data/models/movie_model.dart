@@ -1,157 +1,85 @@
-import 'dart:convert';
+import '../../domain/entities/movie_entity.dart';
 
-class MovieResultModel {
-  final List<Movies>? movieResult;
+class MovieModel extends MovieEntity {
+  final int id;
+  final bool? video;
+  final int? voteCount;
+  final double? voteAverage;
+  final String title;
+  final String? releaseDate;
+  final String? originalLanguage;
+  final String? originalTitle;
+  final List<int>? genreIds;
+  final String backdropPath;
+  final bool? adult;
+  final String? overview;
+  final String posterPath;
+  final double? popularity;
+  final String? mediaType;
 
-  MovieResultModel(this.movieResult);
+  MovieModel({
+    required this.id,
+    this.video,
+    this.voteCount,
+    this.voteAverage,
+    required this.title,
+    this.releaseDate,
+    this.originalLanguage,
+    this.originalTitle,
+    this.genreIds,
+    required this.backdropPath,
+    this.adult,
+    this.overview,
+    required this.posterPath,
+    this.popularity,
+    this.mediaType,
+  }) : super(
+          id: id,
+          title: title,
+          backdropPath: backdropPath,
+          posterPath: posterPath,
+          releaseDate: releaseDate,
+          voteAverage: voteAverage,
+          overview: overview,
+        );
 
-  Map<String, dynamic> toMap() {
-    return {
-      'data': movieResult?.map((x) => x.toMap()).toList(),
-    };
-  }
-
-  factory MovieResultModel.fromMap(Map<String, dynamic> map) {
-    return MovieResultModel(
-      map['data'] != null
-          ? List<Movies>.from(map['data']?.map((x) => Movies.fromMap(x)))
-              .toList()
-          : [],
+  factory MovieModel.fromJson(Map<String, dynamic> json) {
+    return MovieModel(
+      popularity: json['popularity']?.toDouble() ?? 0.0,
+      voteCount: json['vote_count'],
+      video: json['video'],
+      posterPath: json['poster_path'] ?? '',
+      id: json['id'] ?? -1,
+      adult: json['adult'],
+      backdropPath: json['backdrop_path'] ?? '',
+      originalLanguage: json['original_language'],
+      originalTitle: json['original_title'],
+      genreIds: json['genre_ids'].cast<int>(),
+      title: json['title'] ?? '',
+      voteAverage: json['vote_average']?.toDouble() ?? 0.0,
+      overview: json['overview'],
+      releaseDate: json['release_date'],
+      mediaType: json['media_type'],
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory MovieResultModel.fromJson(String source) =>
-      MovieResultModel.fromMap(json.decode(source));
-}
-
-class Movies {
-  final String id;
-
-  final Attributes attributes;
-
-  Movies(this.id, this.attributes);
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'attributes': attributes.toMap(),
-    };
-  }
-
-  factory Movies.fromMap(Map<String, dynamic> map) {
-    return Movies(
-      map['id'].toString(),
-      Attributes.fromMap(map['attributes']),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Movies.fromJson(String source) => Movies.fromMap(json.decode(source));
-}
-
-//attributes
-class Attributes {
-  final String name;
-  final String publicationYear;
-
-  final Poster? poster;
-
-  Attributes({
-    required this.name,
-    required this.publicationYear,
-    this.poster,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'publicationYear': publicationYear,
-      'poster': poster?.toMap(),
-    };
-  }
-
-  factory Attributes.fromMap(Map<String, dynamic> map) {
-    return Attributes(
-      name: map['name'] ?? '',
-      publicationYear: map['publicationYear'].toString(),
-      poster: map['poster']['data']['attributes'] != null
-          ? Poster.fromMap(map['poster']['data']['attributes'])
-          : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Attributes.fromJson(String source) =>
-      Attributes.fromMap(json.decode(source));
-}
-
-class Poster {
-  final String? url;
-
-  Poster(
-    this.url,
-  );
-
-  Map<String, dynamic> toMap() {
-    return {'url': url};
-  }
-
-  factory Poster.fromMap(Map<String, dynamic> map) {
-    return Poster(
-      map['url'] ?? "",
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Poster.fromJson(String source) => Poster.fromMap(json.decode(source));
-}
-
-class Meta {
-  Pagination? pagination;
-
-  Meta({this.pagination});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    pagination = json['pagination'] != null
-        ? Pagination.fromJson(json['pagination'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (pagination != null) {
-      data['pagination'] = pagination!.toJson();
-    }
-    return data;
-  }
-}
-
-class Pagination {
-  int? page;
-  int? pageSize;
-  int? pageCount;
-  int? total;
-
-  Pagination({this.page, this.pageSize, this.pageCount, this.total});
-
-  Pagination.fromJson(Map<String, dynamic> json) {
-    page = json['page'];
-    pageSize = json['pageSize'];
-    pageCount = json['pageCount'];
-    total = json['total'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['page'] = this.page;
-    data['pageSize'] = this.pageSize;
-    data['pageCount'] = this.pageCount;
-    data['total'] = this.total;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['video'] = this.video;
+    data['vote_count'] = this.voteCount;
+    data['vote_average'] = this.voteAverage;
+    data['title'] = this.title;
+    data['release_date'] = this.releaseDate;
+    data['original_language'] = this.originalLanguage;
+    data['original_title'] = this.originalTitle;
+    data['genre_ids'] = this.genreIds;
+    data['backdrop_path'] = this.backdropPath;
+    data['adult'] = this.adult;
+    data['overview'] = this.overview;
+    data['poster_path'] = this.posterPath;
+    data['popularity'] = this.popularity;
+    data['media_type'] = this.mediaType;
     return data;
   }
 }
