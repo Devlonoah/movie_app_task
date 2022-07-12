@@ -49,14 +49,14 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.devlonoah.movieapp_task"
+        applicationId "com.devlonoah.movie_plug"
         minSdkVersion 18
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-      signingConfigs {
+    signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
@@ -69,6 +69,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
            signingConfig signingConfigs.release
        }
    }
+
 
 }
 

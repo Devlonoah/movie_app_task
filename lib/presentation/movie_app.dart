@@ -69,7 +69,7 @@ class _MovieAppState extends State<MovieApp> {
                 child: MaterialApp(
                   navigatorKey: _navigatorKey,
                   debugShowCheckedModeBanner: false,
-                  title: 'Movie App',
+                  title: 'Movie plug',
                   theme: ThemeData(
                     unselectedWidgetColor: AppColor.royalBlue,
                     primaryColor:
